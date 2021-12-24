@@ -10,7 +10,7 @@ pipeline {
 
 		stage('Test with coverage') {
 			steps {
-				dir('backend') {
+				dir('be') {
 					sh './gradlew testCoverage'
 				}
 			}
@@ -19,7 +19,7 @@ pipeline {
         stage('SonarCloud PR analysis') {
             steps {
                 withSonarQubeEnv('SonarCloud') {
-                    dir('backend') {
+                    dir('be') {
                         sh "./gradlew --info sonarqube \
                         	-Dsonar.projectKey=hsik0225_chess \
                         	-Dsonar.organization=seed \
