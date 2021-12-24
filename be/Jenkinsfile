@@ -4,7 +4,7 @@ pipeline {
         stage('SCM') {
             steps {
             	git branch: "dev",
-                url: "https://github.com/hsik0225/dropthecode.git"
+                url: "https://github.com/hsik0225/chess.git"
             }
         }
 
@@ -21,10 +21,10 @@ pipeline {
                 withSonarQubeEnv('SonarCloud') {
                     dir('backend') {
                         sh "./gradlew --info sonarqube \
-                        	-Dsonar.projectKey=hsik0225_dropthecode \
+                        	-Dsonar.projectKey=hsik0225_chess \
                         	-Dsonar.organization=seed \
                         	-Dsonar.pullrequest.provider=GitHub \
-                        	-Dsonar.pullrequest.github.repository=hsik0225/dropthecoe \
+                        	-Dsonar.pullrequest.github.repository=hsik0225/chess \
                         	-Dsonar.pullrequest.key=${CHANGE_ID} \
                         	-Dsonar.pullrequest.base=dev \
                         	-Dsonar.pullrequest.branch=${BRANCH_NAME}"
