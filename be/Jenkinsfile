@@ -1,0 +1,36 @@
+pipeline {
+    agent any
+    stages{
+        stage('SCM') {
+            steps {
+            	git branch: "dev",
+                url: "https://github.com/hsik0225/chess.git"
+            }
+        }
+
+		stage('Test with coverage') {
+			steps {
+				dir('be') {
+					sh './gradlew testCoverage'
+				}
+			}
+		}
+
+        stage('SonarCloud PR analysis') {
+            steps {
+                withSonarQubeEnv('SonarCloud') {
+                    dir('be') {
+                        sh "./gradlew --info sonarqube \
+                        	-Dsonar.projectKey=hsik0225_chess \
+                        	-Dsonar.organization=seed \
+                        	-Dsonar.pullrequest.provider=GitHub \
+                        	-Dsonar.pullrequest.github.repository=hsik0225/chess \
+                        	-Dsonar.pullrequest.key=${CHANGE_ID} \
+                        	-Dsonar.pullrequest.base=dev \
+                        	-Dsonar.pullrequest.branch=${BRANCH_NAME}"
+                    }
+                }
+            }
+        }
+    }
+}
